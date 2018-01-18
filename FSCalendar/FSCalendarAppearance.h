@@ -99,6 +99,11 @@ typedef NS_OPTIONS(NSUInteger, FSCalendarCaseOptions) {
 @property (strong, nonatomic) UIColor  *weekdayTextColor;
 
 /**
+ * The custom Symbols of weeks
+ */
+@property (copy, nonatomic) NSArray *weekdayCustomSymbols;
+
+/**
  * The color of month header text.
  */
 @property (strong, nonatomic) UIColor  *headerTitleColor;

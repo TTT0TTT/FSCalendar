@@ -33,6 +33,10 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.calendar.appearance.weekdayCustomSymbols = ["日","一","二","三","四","五","六"]
+        self.calendar.calendarWeekdayView.configureAppearance()
+        self.calendar.appearance.headerDateFormat = "yyyy:MM"
+        
         if UIDevice.current.model.hasPrefix("iPad") {
             self.calendarHeightConstraint.constant = 400
         }
@@ -42,7 +46,6 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
         self.view.addGestureRecognizer(self.scopeGesture)
         self.tableView.panGestureRecognizer.require(toFail: self.scopeGesture)
         self.calendar.scope = .week
-        
         // For UITest
         self.calendar.accessibilityIdentifier = "calendar"
         
