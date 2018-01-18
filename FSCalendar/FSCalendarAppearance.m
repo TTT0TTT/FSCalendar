@@ -142,7 +142,10 @@
         [_calendar.visibleCells makeObjectsPerformSelector:@selector(setNeedsLayout)];
     }
 }
-
+- (void)setWeekdayCustomSymbols:(NSArray *)weekdayCustomSymbols {
+    _weekdayCustomSymbols = weekdayCustomSymbols;
+    [self.calendar.calendarHeaderView configureAppearance];
+}
 - (void)setTitleDefaultColor:(UIColor *)color
 {
     if (color) {
