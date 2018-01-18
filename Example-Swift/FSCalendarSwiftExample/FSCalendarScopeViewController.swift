@@ -34,7 +34,6 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
         super.viewDidLoad()
         
         self.calendar.appearance.weekdayCustomSymbols = ["日","一","二","三","四","五","六"]
-        self.calendar.calendarWeekdayView.configureAppearance()
         self.calendar.appearance.headerDateFormat = "yyyy:MM"
         
         if UIDevice.current.model.hasPrefix("iPad") {
