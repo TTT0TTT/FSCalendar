@@ -35,6 +35,9 @@ class FSCalendarScopeExampleViewController: UIViewController, UITableViewDataSou
         
         self.calendar.appearance.weekdayCustomSymbols = ["日","一","二","三","四","五","六"]
         self.calendar.appearance.headerDateFormat = "yyyy:MM"
+        self.calendar.calendarHeaderView.style = .full
+        self.calendar.calendarHeaderView.textAlignment = .left
+        self.calendar.calendarHeaderView.leftOffset = 15
         
         if UIDevice.current.model.hasPrefix("iPad") {
             self.calendarHeightConstraint.constant = 400

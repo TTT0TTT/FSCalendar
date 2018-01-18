@@ -11,6 +11,12 @@
 #import "FSCalendarHeaderView.h"
 #import "FSCalendarCollectionView.h"
 #import "FSCalendarDynamicHeader.h"
+@interface FSCalendarHeaderLayout()
+@property (assign, nonatomic) FSCalendarHeaderViewStyle style;
+@end
+@interface FSCalendarHeaderCell()
+@property (assign, nonatomic) CGFloat leftOffset;
+@end
 
 @interface FSCalendarHeaderView ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
@@ -47,8 +53,11 @@
     _needsAdjustingMonthPosition = YES;
     _scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _scrollEnabled = YES;
-    
+    _style = FSCalendarHeaderViewStyleDefault;
+    _textAlignment = NSTextAlignmentCenter;
+    _leftOffset = 0;
     FSCalendarHeaderLayout *collectionViewLayout = [[FSCalendarHeaderLayout alloc] init];
+    collectionViewLayout.style = _style;
     self.collectionViewLayout = collectionViewLayout;
     
     FSCalendarCollectionView *collectionView = [[FSCalendarCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:collectionViewLayout];
@@ -123,7 +132,10 @@
 }
 
 #pragma mark - Properties
-
+- (void)setStyle:(FSCalendarHeaderViewStyle)style {
+    _style = style;
+    self.collectionViewLayout.style = style;
+}
 - (void)setCalendar:(FSCalendar *)calendar
 {
     _calendar = calendar;
@@ -146,8 +158,13 @@
 - (void)scrollToOffset:(CGFloat)scrollOffset animated:(BOOL)animated
 {
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        CGFloat step = self.collectionView.fs_width*((self.scrollDirection==UICollectionViewScrollDirectionHorizontal)?0.5:1);
-        [_collectionView setContentOffset:CGPointMake((scrollOffset+0.5)*step, 0) animated:animated];
+        if (_style == FSCalendarHeaderViewStyleDefault) {
+            CGFloat step = self.collectionView.fs_width*((self.scrollDirection==UICollectionViewScrollDirectionHorizontal)?0.5:1);
+            [_collectionView setContentOffset:CGPointMake((scrollOffset+0.5)*step, 0) animated:animated];
+        } else {
+            CGFloat step = self.collectionView.fs_width;
+            [_collectionView setContentOffset:CGPointMake(scrollOffset * step, 0) animated:animated];
+        }
     } else {
         CGFloat step = self.collectionView.fs_height;
         [_collectionView setContentOffset:CGPointMake(0, scrollOffset*step) animated:animated];
@@ -184,6 +201,8 @@
     FSCalendarAppearance *appearance = self.calendar.appearance;
     cell.titleLabel.font = appearance.headerTitleFont;
     cell.titleLabel.textColor = appearance.headerTitleColor;
+    cell.titleLabel.textAlignment = self.textAlignment;
+    cell.leftOffset = self.leftOffset;
     _calendar.formatter.dateFormat = appearance.headerDateFormat;
     BOOL usesUpperCase = (appearance.caseOptions & 15) == FSCalendarCaseOptionsHeaderUsesUpperCase;
     NSString *text = nil;
@@ -252,6 +271,7 @@
 {
     [super setBounds:bounds];
     _titleLabel.frame = bounds;
+    _titleLabel.fs_left = _leftOffset;
 }
 
 - (void)layoutSubviews
@@ -259,6 +279,7 @@
     [super layoutSubviews];
     
     self.titleLabel.frame = self.contentView.bounds;
+    self.titleLabel.fs_left = _leftOffset;
     
     if (self.header.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
         CGFloat position = [self.contentView convertPoint:CGPointMake(CGRectGetMidX(self.contentView.bounds), CGRectGetMidY(self.contentView.bounds)) toView:self.header].x;
@@ -298,10 +319,15 @@
 {
     [super prepareLayout];
     
-    self.itemSize = CGSizeMake(
-                               self.collectionView.fs_width*((self.scrollDirection==UICollectionViewScrollDirectionHorizontal)?0.5:1),
-                               self.collectionView.fs_height
-                              );
+    if (_style == FSCalendarHeaderViewStyleDefault) {
+        
+        self.itemSize = CGSizeMake(
+                                   self.collectionView.fs_width*((self.scrollDirection==UICollectionViewScrollDirectionHorizontal)?0.5:1),
+                                   self.collectionView.fs_height
+                                   );
+    } else {
+        self.itemSize = CGSizeMake(self.collectionView.fs_width, self.collectionView.fs_height);
+    }
     
 }
 

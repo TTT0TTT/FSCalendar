@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, FSCalendarHeaderViewStyle) {
+    FSCalendarHeaderViewStyleDefault,
+    FSCalendarHeaderViewStyleFull
+};
 
 @class FSCalendar, FSCalendarAppearance, FSCalendarHeaderLayout, FSCalendarCollectionView;
 
@@ -19,6 +23,11 @@
 
 @property (assign, nonatomic) CGFloat scrollOffset;
 @property (assign, nonatomic) UICollectionViewScrollDirection scrollDirection;
+
+@property (assign, nonatomic) FSCalendarHeaderViewStyle style;
+@property (assign, nonatomic) NSTextAlignment textAlignment;
+@property (assign, nonatomic) CGFloat leftOffset;
+
 @property (assign, nonatomic) BOOL scrollEnabled;
 @property (assign, nonatomic) BOOL needsAdjustingViewFrame;
 @property (assign, nonatomic) BOOL needsAdjustingMonthPosition;
